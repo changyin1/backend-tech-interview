@@ -1,0 +1,19 @@
+### Composer specific
+/vendor/
+composer.phar
+
+### App specific
+/public/system/
+
+### IDE and software/tool specific
+/.idea/
+
+### OS Specific
+.DS_Store
+Thumbs.db
+
+###VS Code
+.vscode
+
+# Development
+/dev/local
