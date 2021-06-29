@@ -11,16 +11,20 @@ class CouponsController extends Controller
 {
     public function show(string $coupon)
     {
-        if (Cache::has('show_coupon_' . strtolower($coupon))) {
-            return Cache::get('show_coupon_' . strtolower($coupon));
+        if (Cache::has('show_coupon_' . strtolower($coupon)) . '_with_promo') {
+            return Cache::get('show_coupon_' . strtolower($coupon) . '_with_promo');
         }
 
         $coupon = Coupon::where('coupon_code', '=', $coupon)->where('admin_invalidated', '=', '0')->firstOrFail();
+        $promos = new PromotionRepository();
+        $promo = $promos->getActivePromotionForDateAsCoupon(\Carbon\Carbon::now());
 
-        $transformer = app(CouponTransformer::class);
-        $output = $transformer->transform($coupon);
+        $coupons = [$coupon, $promo];
 
-        Cache::put('show_coupon_' . $coupon->coupon_code, $output, 10);
+        $transformer = app(PlanTransformer::class);
+        $output = $transformer->transformCollectionWithCoupons(Plan::orderBy('id', 'ASC')->get(), $coupons);
+
+        Cache::put('show_coupon_' . $coupon->coupon_code . '_with_promo', $output, 10);
 
         return response()->json($output);
     }
