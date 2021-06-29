@@ -1,0 +1,4 @@
+Laravel project was created using the following command and then fitting the environment and code to the project:
+
+docker-compose run --rm --volume `pwd`:/app --volume `pwd`/.composer:/.composer --user $(id -u):$(id -g) --workdir /app/laravel php-fpm composer create-project --prefer-dist laravel/laravel:5.2 .
+
